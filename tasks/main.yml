@@ -1,1 +1,48 @@
 ---
+- name: Install the latest version of Squid, nginx
+  yum:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - nginx
+    - squid
+
+- name: Enable IPv4 forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    sysctl_file: /etc/sysctl.d/11-gce-network-security.conf
+    reload: yes
+
+- name: Set the NAT Masquerade iptables rule
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: eth0
+    jump: MASQUERADE
+
+- name: Add squid proxy configuration
+  copy:
+    dest: /etc/squid/squid.conf
+    owner: root
+    group: root
+    mode: 0640
+    src: squid.conf
+
+- name: Allow squid on the firewall
+  firewalld:
+    service: squid
+    permanent: true
+    state: enabled
+
+- name: Reload squid, nginx, firewalld
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items:
+  - firewalld
+  - nginx
+  - squid
