@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: Christian Witts
+  description: This Ansible Role sets up nginx and a squid proxy for a NAT gateway instance
+  license: "license (Apache 2.0)"
+  min_ansible_version: 2.2
+  platforms:
+    - name: centos
+      versions:
+        - 0.0.1
+  galaxy_tags:
+  # - cloud
+  # - cloud:ec2
+  # - cloud:gce
+  # - cloud:rax
+  # - clustering
+  # - database
+  # - database:nosql
+  # - database:sql
+  # - development
+  # - monitoring
+  # - networking
+  # - packaging
+  # - system
+  # - web
