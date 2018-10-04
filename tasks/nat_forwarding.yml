@@ -1,0 +1,15 @@
+---
+- name: Enable IPv4 forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    sysctl_file: /etc/sysctl.d/99-ip_forwarding.conf
+    reload: yes
+
+- name: Set the NAT Masquerade iptables rule
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: eth0
+    jump: MASQUERADE

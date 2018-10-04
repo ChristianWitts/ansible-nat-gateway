@@ -1,0 +1,9 @@
+---
+- name: Install the latest version of Squid, nginx
+  yum:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - nginx
+    - squid3

@@ -23,6 +23,29 @@ describe service('node-exporter'), :if => os[:family] == 'redhat' do
   it { should_be_running }
 end
 
+describe package('nginx'), :if => os[:family] == 'debian' do
+  it { should_be_installed }
+end
+
+describe package('squid3'), :if => os[:family] == 'debian' do
+  it { should_be_installed }
+end
+
+describe service('nginx'), :if => os[:family] == 'debian' do
+  it { should_be_enabled }
+  it { should_be_running }
+end
+
+describe service('squid3'), :if => os[:family] == 'debian' do
+  it { should_be_enabled }
+  it { should_be_running }
+end
+
+describe service('node-exporter'), :if => os[:family] == 'debian' do
+  it { should_be_enabled }
+  it { should_be_running }
+end
+
 describe port(3128) do
   it { should_be_listening }
 end

@@ -1,0 +1,14 @@
+---
+- name: Add squid proxy configuration
+  copy:
+    dest: /etc/squid/squid.conf
+    owner: root
+    group: root
+    mode: 0640
+    src: squid.conf
+
+- name: Allow squid on the firewall
+  firewalld:
+    service: squid
+    permanent: true
+    state: enabled

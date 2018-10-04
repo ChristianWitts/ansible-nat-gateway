@@ -1,0 +1,32 @@
+---
+- name: Download and install prometheus node exporter
+  shell: |
+    curl -o node_exporter-0.16.0.linux-amd64.tar.gz -L https://github.com/prometheus/node_exporter/releases/download/v0.16.0/node_exporter-0.16.0.linux-amd64.tar.gz
+    tar -xzvf node_exporter-0.16.0.linux-amd64.tar.gz
+    mv node_exporter-0.16.0.linux-amd64/node_exporter /usr/local/bin/node_exporter
+  args:
+    executable: /bin/bash
+  register: prom_node_exporter_installer
+
+- name: Add prometheus node exporter systemd configuration
+  copy:
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+    mode: 0400
+    src: node_exporter.service
+
+- name: Allow node exporter on the firewall
+  firewalld:
+    port: 9090/tcp
+    permanent: true
+    state: enabled
+
+- name: Reload node_exporter and firewalld
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items:
+  - firewalld
+  - node_exporter
